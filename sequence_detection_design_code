@@ -1,0 +1,65 @@
+// fsm_sequence_detector//
+module melay_101_detector
+  (
+    input logic clk,
+    input logic reset,
+    input logic din,
+    output logic detect
+  );
+  
+  typedef enum logic [1:0]{
+    s0,  //nothing_detected
+    s1,  //detected 1
+    s2   //detected 10
+  } state_t;
+  
+state_t present_state,next_state;
+  
+  //state register//
+  always_ff @(posedge clk or posedge reset)begin
+    if(reset)
+      present_state <=s0;
+    else
+      present_state<=next_state;
+  end
+  
+  //next_state and output logic//
+  always_comb begin
+    
+    //for_default_values//
+    next_state = present_state;
+    detect = 1'b0;
+    
+    case(present_state)
+      
+      s0:begin
+        if(din == 1'b1)
+          next_state = s1;
+        else
+          next_state = s0;
+      end
+      
+      s1:begin
+        if(din == 1'b0)
+          next_state = s2;
+        else
+          next_state = s1;
+      end
+      
+      s2:begin
+        if(din == 1'b1)begin
+          next_state = s1;
+        detect = 1'b1;
+        end
+        
+        else begin
+          next_state = s0;
+        end
+      end
+      
+    endcase
+    
+  end
+endmodule
+
+          
