@@ -1,5 +1,5 @@
-// Code your testbench here
-// or browse Examples
+// test_bench
+
 module tb;
   logic clk;
   logic reset;
