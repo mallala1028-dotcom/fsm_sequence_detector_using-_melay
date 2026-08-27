@@ -1,1 +1,55 @@
-
+// Code your testbench here
+// or browse Examples
+module tb;
+  logic clk;
+  logic reset;
+  logic din;
+  logic detect;
+  
+  //dut
+  melay_101_detector dut(.*);
+  initial begin
+    clk=1'b0;
+    forever #5 clk=~clk;
+  end
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0,tb);
+  end
+  
+  initial begin
+    reset=1'b1;
+    din=1'b0;
+    
+    #10;
+    reset=1'b0;
+    
+    @(posedge clk);
+    din=1'b1;
+    
+    
+    @(posedge clk);
+    din=1'b0;
+    
+    @(posedge clk);
+    din=1'b1;
+    
+    
+    //next_input
+    @(posedge clk);
+    din=1'b0;
+    
+    //next_input
+    @(posedge clk);
+    din=1'b1;
+    
+    #10;
+    $finish;
+  end
+  
+ initial begin $monitor("time=%0t,clk=%0b,reset=%0b,din=%0b,detect=%0b,present_state=%0b,next_state=%0b",$time,clk,reset,din,detect,dut.present_state,dut.next_state);
+ end
+endmodule
+    
+    
